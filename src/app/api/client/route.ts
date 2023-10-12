@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     throw new Error('File channel not found');
   }
   const channelId = channelsData.data[0].id;
-  const path = `/test-folder`;
+  const path = `/welcome-packet`;
   const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder`, {
     body: JSON.stringify({
       path,
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
 
   const createFileRes = await fetch(`${COPILOT_API_BASE}/files/file`, {
     body: JSON.stringify({
-      path: '/test-folder-2/StrengthProgram.pdf',
+      path: '/welcome-packet/StrengthProgram.pdf',
       channelId,
     }),
     headers: {
@@ -133,6 +133,7 @@ export async function POST(request: Request) {
       ContentType: 'application/pdf',
     },
   });
-  const res = await uploadFileToS3Res.json();
+  const res = await uploadFileToS3Res.body;
+  console.log({ res });
   return Response.json({});
 }

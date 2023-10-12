@@ -33,6 +33,7 @@ export const GetFromS3Bucket = async (filename: string) => {
   const payload = {
     Bucket: process.env.AWS_S3_BUCKET,
     Key: filename,
+    ResponseContentType: 'application/pdf',
   }
 
   try {
