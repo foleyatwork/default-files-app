@@ -113,7 +113,8 @@ export async function POST(request: Request) {
     },
     method: 'POST',
   });
-  console.log({ createFileRes });
+  const createFileData = await createFileRes.json();
+  console.log({ createFileData });
 
   return Response.json({});
 }
