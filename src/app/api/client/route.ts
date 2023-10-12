@@ -75,9 +75,7 @@ const isCreateFileRes = (data: any): data is CreateFileRes => {
 }
 
 export async function POST(request: Request) {
-  console.log({ request });
   const data = await request.json();
-  console.log({ data });
   if (!isClientCreatedWebhook(data)) {
     throw new Error('Invalid request');
   }
@@ -121,6 +119,7 @@ export async function POST(request: Request) {
     method: 'POST',
   });
 
+  console.log('====================')
   const createFileData = await createFileRes.json();
   if (!('uploadUrl' in createFileData)) {
     throw new Error('Could not retrieve file upload URL');
