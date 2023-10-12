@@ -1,6 +1,3 @@
-// import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-// import { fromUtf8 } from '@aws-sdk/util-utf8-node'
-
 import {
   S3Client,
   GetObjectCommand,
