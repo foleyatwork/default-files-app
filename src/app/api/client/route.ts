@@ -34,6 +34,7 @@ const COPILOT_API_BASE = 'https://api-beta.copilot.com/v1';
 // }
 interface ClientCreatedWebhook { eventType: 'client.created'; data: Client; }
 const isClientCreatedWebhook = (data: any): data is ClientCreatedWebhook => {
+  console.log(typeof data)
   return 'eventType' in data && data.eventType === 'client.created';
 }
 
@@ -92,10 +93,10 @@ export async function POST(request: Request) {
     throw new Error('File channel not found');
   }
   const channelId = channelsData.data[0].id;
-
+  const path = `/test-folder`;
   const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder`, {
     body: JSON.stringify({
-      path: '/test-folder-2',
+      path,
       channelId,
     }),
     headers: {
@@ -118,12 +119,10 @@ export async function POST(request: Request) {
     },
     method: 'POST',
   });
-
   const createFileData = await createFileRes.json();
   if (!('uploadUrl' in createFileData)) {
     throw new Error('Could not retrieve file upload URL');
   }
-
   const file = await GetFromS3Bucket('StrengthProgram.pdf');
   const uploadFileToS3Res = await fetch(createFileData.uploadUrl, {
     body: file as BodyInit,
@@ -131,10 +130,9 @@ export async function POST(request: Request) {
     duplex: 'half',
     method: 'PUT',
     headers: {
-      ContentType: 'application/octet-stream',
+      ContentType: 'application/pdf',
     },
   });
   const res = await uploadFileToS3Res.json();
-
   return Response.json({});
 }
