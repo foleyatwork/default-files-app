@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "form-data": "^4.0.0",
     "@aws-sdk/client-s3": "^3.427.0",
+    "axios": "^1.5.1",
+    "form-data": "^4.0.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
