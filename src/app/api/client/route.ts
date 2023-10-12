@@ -1,6 +1,13 @@
+const COPILOT_API_BASE = 'https://api-beta.copilot.com/v1';
+
+// Webhook steps overview:
+// -----------------------
+// 1. Takes a client in.
+// 2. Call list file channels with the client ID set.
+// 3. Create the files within the file channel.
+
 // Sample webhook payload:
-// ----------------------
-//
+// -----------------------
 // {
 //   data: {
 //     eventType: 'client.created',
@@ -20,22 +27,30 @@
 //     }
 //   }
 // }
-
-import { CopilotAPI } from "@/utils/copilotApiUtils";
-
-interface ClientCreatedWebhook {
-  eventType: 'client.created';
-  data: Client;
+interface ClientCreatedWebhook { eventType: 'client.created'; data: Client; }
+const isClientCreatedWebhook = (data: any): data is ClientCreatedWebhook => {
+  return 'eventType' in data && data.eventType === 'client.created';
 }
 
-const isClientCreatedWebhook = (event: any): event is ClientCreatedWebhook => {
-  return 'eventType' in event && event.eventType === 'client.created';
+// Sample res:
+// -----------
+// {
+//   data: [
+//     {
+//       id: 'cjRpZqY-p/84847aba-b48a-4b62-b4da-999e87699f6a',
+//       object: 'fileChannel',
+//       createdAt: '2023-10-12T09:57:34.636933883Z',
+//       updatedAt: '2023-10-12T09:57:34.636933883Z',
+//       membershipType: 'individual',
+//       membershipEntityId: '84847aba-b48a-4b62-b4da-999e87699f6a',
+//       memberIds: [Array]
+//     }
+//   ]
+// }
+interface FileChannelRes { data: { id: string; object: 'fileChannel'; }[] }
+const isFileChannelRes = (data: any): data is FileChannelRes => {
+  return 'data' in data && Array.isArray(data) && data[0]?.object === 'fileChannel';
 }
-
-// Steps:
-// 1. Takes a client in.
-// 2. Call list file channels with the client ID set.
-// 3. Create the files within the file channel.
 
 export async function POST(request: Request) {
   const data = await request.json();
@@ -45,13 +60,17 @@ export async function POST(request: Request) {
   if (!process.env.COPILOT_API_KEY) {
     throw new Error('Missing Copilot API key');
   }
-
-  const res = await fetch(`https://api-beta.copilot.com/v1/channels/files?memberId=${data.data.id}`, {
+  const res = await fetch(`${COPILOT_API_BASE}/channels/files?memberId=${data.data.id}`, {
     headers: {
       'x-api-key': process.env.COPILOT_API_KEY,
     }
   });
-  console.log(await res.json())
+  const channelData = await res.json();
+  if (!isFileChannelRes(channelData)) {
+    throw new Error('File channel not found');
+  }
+
+  console.log({ channelId: channelData.data[0].id })
 
   return Response.json({});
 }
