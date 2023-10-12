@@ -52,6 +52,23 @@ const isFileChannelRes = (data: any): data is FileChannelRes => {
   return 'data' in data && Array.isArray(data.data) && data.data[0]?.object === 'fileChannel';
 }
 
+// Sample res:
+// -----------
+// {
+//   id: '7fab5265-d39e-43cf-98ce-713bc0b13e73',
+//   object: 'folder',
+//   data: 'cjRpZqY-p/9cb04ef6-ed4f-4445-9f75-8e7979e2421f',
+//   createdBy: 'ab8c27c0-4948-4de0-a870-f6dbd12d9b92',
+//   createdAt: '2023-10-12T10:24:23.072969339Z',
+//   updatedAt: '2023-10-12T10:24:23.072969339Z',
+//   channelId: 'cjRpZqY-p/9cb04ef6-ed4f-4445-9f75-8e7979e2421f',
+//   fields: { linkUrl: '', path: 'test-folder', name: 'test-folder' }
+// }
+interface CreateFileRes { }
+const isCreateFileRes = (data: any): data is CreateFileRes => {
+  return 'channelId' in data;
+}
+
 export async function POST(request: Request) {
   const data = await request.json();
   if (!isClientCreatedWebhook(data)) {
@@ -69,9 +86,9 @@ export async function POST(request: Request) {
   if (!isFileChannelRes(channelsData)) {
     throw new Error('File channel not found');
   }
-
   const channelId = channelsData.data[0].id;
-  const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder?memberId=${data.data.id}`, {
+
+  const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder`, {
     body: JSON.stringify({
       path: '/test-folder',
       channelId,
@@ -82,7 +99,21 @@ export async function POST(request: Request) {
     method: 'POST',
   });
   const createFolderData = await createFolderRes.json();
-  console.log({ createFolderData });
+  if (!isCreateFileRes(createFolderData)) {
+    throw new Error('Failed to create folder');
+  }
+
+  const createFileRes = await fetch(`${COPILOT_API_BASE}/files/file`, {
+    body: JSON.stringify({
+      path: '/test-folder/eyee.gif',
+      channelId,
+    }),
+    headers: {
+      'x-api-key': process.env.COPILOT_API_KEY,
+    },
+    method: 'POST',
+  });
+  console.log({ createFileRes });
 
   return Response.json({});
 }
