@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 
   const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder`, {
     body: JSON.stringify({
-      path: '/test-folder',
+      path: '/test-folder-2',
       channelId,
     }),
     headers: {
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
 
   const createFileRes = await fetch(`${COPILOT_API_BASE}/files/file`, {
     body: JSON.stringify({
-      path: '/test-folder/eyee.gif',
+      path: '/test-folder-2/eyee.gif',
       channelId,
     }),
     headers: {
@@ -128,14 +128,13 @@ export async function POST(request: Request) {
   formData.append('file', fileStream);
   const uploadFileToS3Res = await fetch(createFileData.uploadUrl, {
     body: JSON.stringify({
-      path: '/test-folder/eyee.gif',
-      channelId,
       ...formData,
     }),
     method: 'PUT',
   });
 
-  console.log({ uploadFileToS3Res });
+  const res = await uploadFileToS3Res.json();
+  console.log({ res });
 
   return Response.json({});
 }
