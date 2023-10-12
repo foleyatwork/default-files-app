@@ -1,4 +1,4 @@
-import { Client, Company, CopilotAPI } from '@/utils/copilotApiUtils'
+import { CopilotAPI } from '@/utils/copilotApiUtils'
 import Image from 'next/image'
 
 type SearchParams = { [key: string]: string | string[] | undefined }

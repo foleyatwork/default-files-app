@@ -1,11 +1,5 @@
 const BaseApiURL = 'https://api-beta.copilot.com/v1'
 
-export type Company = {
-    id: string
-    name: string
-    iconImageUrl: string
-}
-
 export class CopilotAPI {
     apiKey: string
 

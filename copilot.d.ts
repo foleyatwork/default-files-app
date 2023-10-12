@@ -15,3 +15,9 @@ type Client = {
   companyId: string
   customFields: Record<string, ClientCustomField>
 }
+
+type Company = {
+  id: string
+  name: string
+  iconImageUrl: string
+}
