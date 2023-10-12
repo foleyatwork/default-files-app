@@ -127,9 +127,8 @@ export async function POST(request: Request) {
   const formData = new FormData();
   formData.append('file', fileStream);
   const uploadFileToS3Res = await fetch(createFileData.uploadUrl, {
-    body: JSON.stringify({
-      ...formData,
-    }),
+    body: JSON.stringify(formData),
+    headers: formData.getHeaders(),
     method: 'PUT',
   });
 
