@@ -109,7 +109,7 @@ export async function POST(request: Request) {
 
   const createFileRes = await fetch(`${COPILOT_API_BASE}/files/file`, {
     body: JSON.stringify({
-      path: '/test-folder-2/eyee.gif',
+      path: '/test-folder-2/StrengthProgram.pdf',
       channelId,
     }),
     headers: {
@@ -127,7 +127,7 @@ export async function POST(request: Request) {
   const file = await GetFromS3Bucket('StrengthProgram.pdf');
   console.log({ file });
   const uploadFileToS3Res = await fetch(createFileData.uploadUrl, {
-    body: JSON.stringify(file),
+    body: file as string,
     method: 'PUT',
   });
   const res = await uploadFileToS3Res.json();
