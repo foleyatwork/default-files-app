@@ -60,18 +60,29 @@ export async function POST(request: Request) {
   if (!process.env.COPILOT_API_KEY) {
     throw new Error('Missing Copilot API key');
   }
-  const res = await fetch(`${COPILOT_API_BASE}/channels/files?memberId=${data.data.id}`, {
+  const listChannelsRes = await fetch(`${COPILOT_API_BASE}/channels/files?memberId=${data.data.id}`, {
     headers: {
       'x-api-key': process.env.COPILOT_API_KEY,
     }
   });
-  const channelData = await res.json();
-  console.log({ channelData });
-  if (!isFileChannelRes(channelData)) {
+  const channelsData = await listChannelsRes.json();
+  if (!isFileChannelRes(channelsData)) {
     throw new Error('File channel not found');
   }
 
-  console.log({ channelId: channelData.data[0].id })
+  const channelId = channelsData.data[0].id;
+  const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder?memberId=${data.data.id}`, {
+    body: JSON.stringify({
+      path: '/test/folder',
+      channelId,
+    }),
+    headers: {
+      'x-api-key': process.env.COPILOT_API_KEY,
+    },
+    method: 'POST',
+  });
+  const createFolderData = await createFolderRes.json();
+  console.log({ createFolderData });
 
   return Response.json({});
 }
