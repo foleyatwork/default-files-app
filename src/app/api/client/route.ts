@@ -49,7 +49,7 @@ const isClientCreatedWebhook = (data: any): data is ClientCreatedWebhook => {
 // }
 interface FileChannelRes { data: { id: string; object: 'fileChannel'; }[] }
 const isFileChannelRes = (data: any): data is FileChannelRes => {
-  return 'data' in data && Array.isArray(data) && data[0]?.object === 'fileChannel';
+  return 'data' in data && Array.isArray(data.data) && data.data[0]?.object === 'fileChannel';
 }
 
 export async function POST(request: Request) {
