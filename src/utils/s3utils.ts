@@ -20,11 +20,10 @@ type CustomError = {
   name: string
 }
 
-export const GetFromS3Bucket = async (clientId: string) => {
-  const key = `${clientId}.json`
+export const GetFromS3Bucket = async (filename: string) => {
   const payload = {
     Bucket: process.env.AWS_S3_BUCKET,
-    Key: key,
+    Key: filename,
   }
 
   try {
@@ -33,9 +32,9 @@ export const GetFromS3Bucket = async (clientId: string) => {
     let data = ''
 
     return new Promise((resolve, reject) => {
-      stream.on('data', (chunk) => (data += chunk))
-      stream.on('end', () => resolve(JSON.parse(data)))
-      stream.on('error', reject)
+      stream.on('data', (chunk) => (data += chunk));
+      stream.on('end', () => resolve(data));
+      stream.on('error', reject);
     })
   } catch (err) {
     if ((err as CustomError).name === 'AccessDenied') {
