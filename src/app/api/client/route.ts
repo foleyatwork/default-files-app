@@ -73,7 +73,7 @@ export async function POST(request: Request) {
   const channelId = channelsData.data[0].id;
   const createFolderRes = await fetch(`${COPILOT_API_BASE}/files/folder?memberId=${data.data.id}`, {
     body: JSON.stringify({
-      path: '/test/folder',
+      path: '/test-folder',
       channelId,
     }),
     headers: {
