@@ -1,23 +1,5 @@
 const BaseApiURL = 'https://api-beta.copilot.com/v1'
 
-type MeResponse = {
-    givenName: string
-    familyName: string
-    email: string
-    portalName: string
-}
-
-type ClientCustomField = string | string[]
-
-export type Client = {
-    id: string
-    givenName: string
-    familyName: string
-    email: string
-    companyId: string
-    customFields: Record<string, ClientCustomField>
-}
-
 export type Company = {
     id: string
     name: string
