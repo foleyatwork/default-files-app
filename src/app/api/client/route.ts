@@ -128,7 +128,7 @@ export async function POST(request: Request) {
   const uploadFileToS3Res = await fetch(createFileData.uploadUrl, {
     body: file as BodyInit,
     // @ts-ignore
-    duplex: true,
+    duplex: 'half',
     method: 'PUT',
     headers: {
       ContentType: 'application/octet-stream',
