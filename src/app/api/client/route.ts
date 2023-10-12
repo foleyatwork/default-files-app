@@ -51,7 +51,7 @@ export async function POST(request: Request) {
       'x-api-key': process.env.COPILOT_API_KEY,
     }
   });
-  console.log(res.json())
+  console.log(await res.json())
 
   return Response.json({});
 }
