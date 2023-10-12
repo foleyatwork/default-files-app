@@ -132,7 +132,7 @@ export async function POST(request: Request) {
     body: file as BodyInit,
     method: 'PUT',
     headers: {
-      ContentType: 'application/pdf',
+      ContentType: 'application/octet-stream',
     },
   });
   const res = await uploadFileToS3Res.json();

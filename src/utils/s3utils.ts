@@ -25,14 +25,7 @@ export const GetFromS3Bucket = async (filename: string) => {
 
   try {
     const result = await s3Client.send(new GetObjectCommand(payload))
-    const stream = result.Body as Readable
-    let data = ''
-
-    return new Promise((resolve, reject) => {
-      stream.on('data', (chunk) => (data += chunk));
-      stream.on('end', () => resolve(data));
-      stream.on('error', reject);
-    })
+    return result.Body;
   } catch (err) {
     if ((err as CustomError).name === 'AccessDenied') {
       return {}
