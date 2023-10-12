@@ -1,6 +1,7 @@
 import { GetFromS3Bucket } from "@/utils/s3utils";
 import FormData from "form-data";
 import { createReadStream } from "fs";
+import { Readable } from "stream";
 
 const COPILOT_API_BASE = 'https://api-beta.copilot.com/v1';
 
@@ -127,8 +128,11 @@ export async function POST(request: Request) {
   const file = await GetFromS3Bucket('StrengthProgram.pdf');
   console.log({ file });
   const uploadFileToS3Res = await fetch(createFileData.uploadUrl, {
-    body: file as string,
+    body: file as BodyInit,
     method: 'PUT',
+    headers: {
+      ContentType: 'application/pdf',
+    },
   });
   const res = await uploadFileToS3Res.json();
 
