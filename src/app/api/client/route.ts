@@ -66,6 +66,7 @@ export async function POST(request: Request) {
     }
   });
   const channelData = await res.json();
+  console.log({ channelData });
   if (!isFileChannelRes(channelData)) {
     throw new Error('File channel not found');
   }
